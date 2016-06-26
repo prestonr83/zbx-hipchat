@@ -106,7 +106,7 @@ class ZabbixAlert(object):
         desc = self._parse()
         return desc.group(8)
 
-    def images(self, okimg, probimg):
+    def images(self, okimg=None, probimg=None):
         """Set the image URLS for the icons used in OK and PROBLEM states."""
         self.okimg = okimg
         self.probimg = probimg
@@ -212,7 +212,8 @@ class ZabbixAlert(object):
 
 def main():
     ZBXALERT = ZabbixAlert(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-    ZBXALERT.images(sys.argv[5], sys.argv[6])
+    if len(sys.argv) == 6:
+        ZBXALERT.images(okimg=sys.argv[5], probimg=sys.argv[6])
     ZBXALERT.sendmsg()
 
 
