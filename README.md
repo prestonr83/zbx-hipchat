@@ -1,5 +1,6 @@
 # zbx-hipchat
-This alert script creates cards in hipchat that are expandable to reveal useful links to the alert.
+This alert script creates cards in hipchat that are expandable to reveal useful links to the alert.  
+This uses the new HipChat v2 API. [HipChat API Info](https://developer.atlassian.com/hipchat/guide/hipchat-rest-api/api-access-tokens#APIaccesstokens-Usergeneratedtokens)
 
 ####Add a new media type to Zabbix
 
@@ -10,7 +11,7 @@ Define the parameters like so.
 1. {ALERT.SENDTO}
 2. {ALERT.MESSAGE}
 3. You subdomain name for the HipChat URL
-4. HipChat API Key
+4. HipChat v2 API Key
 5. Image to use for recovery/OK Messages(Optional)
 6. Image to use for Problem Messages(Optional)
 
