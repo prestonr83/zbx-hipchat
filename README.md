@@ -1,10 +1,12 @@
 # zbx-hipchat
-This alert script creates cards in hipchat that are expandable to reveal useful links to the alert.  
+This alert script creates cards in hipchat that are expandable to reveal useful links to the alert.
 This uses the new HipChat v2 API. [HipChat API Info](https://developer.atlassian.com/hipchat/guide/hipchat-rest-api/api-access-tokens#APIaccesstokens-Usergeneratedtokens)
 
 ####Add a new media type to Zabbix
 
 ![Alt text](/imgs/zbx-media type.png?raw=true "Media Type")
+
+Point the script to the bash file if your having trouble getting the python script to run directly.
 
 Define the parameters like so.
 
@@ -12,8 +14,9 @@ Define the parameters like so.
 2. {ALERT.MESSAGE}
 3. You subdomain name for the HipChat URL
 4. HipChat v2 API Key
-5. Image to use for recovery/OK Messages(Optional)
-6. Image to use for Problem Messages(Optional)
+5. FQDN of your Zabbix installation including http(s)://
+6. Image to use for recovery/OK Messages(Optional)
+7. Image to use for Problem Messages(Optional)
 
 **_The images are optional but you must provide both if you are using them._**
 
@@ -29,17 +32,17 @@ Set the Send to field to the HipChat Room ID you want to use for this user conta
 
 ![Alt text](/imgs/zbx-action.png?raw=true "Action Messsage")
 
-The Subject doesn't matter its not used to alert HipChat.  
+The Subject doesn't matter its not used to alert HipChat.
 Format the Default and Recovery Messages like so.
 
->name: "{TRIGGER.NAME}"  
->id: "{TRIGGER.ID}"  
->status: "{TRIGGER.STATUS}"  
->hostname: "{HOSTNAME}"  
->event_id: "{EVENT.ID}"  
->severity: "{TRIGGER.SEVERITY}"  
->url: "{TRIGGER.URL}"  
->description: "{TRIGGER.DESCRIPTION}"  
+>name: "{TRIGGER.NAME}"
+>id: "{TRIGGER.ID}"
+>status: "{TRIGGER.STATUS}"
+>hostname: "{HOSTNAME}"
+>event_id: "{EVENT.ID}"
+>severity: "{TRIGGER.SEVERITY}"
+>url: "{TRIGGER.URL}"
+>description: "{TRIGGER.DESCRIPTION}"
 
 
 The alerts look like the following in HipChat.

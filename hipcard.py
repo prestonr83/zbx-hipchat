@@ -29,7 +29,7 @@ class ZabbixAlert(object):
 
     HEADERS = {'Content-Type': 'application/json'}
 
-    def __init__(self, roomid, message, hipname, token):
+    def __init__(self, roomid, message, hipname, token, zbxurl):
         """
         The __init__ method requires 4 arguments.
 
@@ -53,14 +53,17 @@ class ZabbixAlert(object):
 
             hipname (str): The company name for your hipchat account.
 
-            token (str): The HipChat v2 API token
+            token (str): The HipChat v2 API token.
+
+            zbxurl (str): The FQDN of your Zabbix installation.
         """
         self.roomid = roomid
         self.message = message
         self.hipname = hipname
         self.token = token
-        self.okimg = ""
-        self.probimg = ""
+        self.zbxurl = zbxurl
+        self.okimg = "http://"
+        self.probimg = "http://"
 
     def _parse(self):
         pattern = (r'name: *"(.*)"\s*id: *"(.*)"\s*status: *"(.*)"\s*hostname:'
@@ -136,16 +139,16 @@ class ZabbixAlert(object):
         return (sevlozenge, msgcolor)
 
     def _formatmessage(self):
-        message = ("{0}:{1} \n <a href='https://zabbix.accusoft.com"
+        message = ("{0}:{1} \n <a href='{5}"
                    "/tr_comments.php?triggerid={2}'>More Information</a> | "
-                   "<a href='https://zabbix.accusoft.com/events.php?"
+                   "<a href='{5}/events.php?"
                    "filter_set=1&triggerid={2}&period=604800'>Events</a> | "
-                   "<a href='https://zabbix.accusoft.com/zabbix.php?"
+                   "<a href='{5}/zabbix.php?"
                    "action=acknowledge.edit&acknowledge_type=1&"
                    "eventids[]={3}&backurl=tr_status.php'>Acknowledge</a> | "
                    "<a href='{4}'>Trigger Link</a></b>") \
                     .format(self._status(), self._name(), self._triggerid(),
-                            self._eventid(), self._url())
+                            self._eventid(), self._url(), self.zbxurl)
         return message
 
     def _card(self):
@@ -154,8 +157,9 @@ class ZabbixAlert(object):
         card = {
             "style": "application",
             "format": "medium",
-            "url": ("https://zabbix.accusoft.com/events.php?filter_set=1&"
-                    "triggerid={0}&period=604800").format(self._triggerid()),
+            "url": ("{1}/events.php?filter_set=1&"
+                    "triggerid={0}&period=604800").format(self._triggerid(),
+                                                          self.zbxurl),
             "id": self._eventid(),
             "title": self._name(),
             "activity": {
@@ -163,15 +167,16 @@ class ZabbixAlert(object):
                          "</b>").format(statloz, self._status(), self._name())},
             "description": {
                 "format": "html",
-                "value": ("<b><a href='https://zabbix.accusoft.com/"
+                "value": ("<b><a href='{3}/"
                           "tr_comments.php?triggerid={0}'>More Information</a>"
-                          " | <a href='https://zabbix.accusoft.com/events.php?"
+                          " | <a href='{3}/events.php?"
                           "filter_set=1&triggerid={0}&period=604800'>Events</a>"
-                          " | <a href='https://zabbix.accusoft.com/zabbix.php?"
+                          " | <a href='{3}/zabbix.php?"
                           "action=acknowledge.edit&acknowledge_type=1&"
                           "eventids[]={1}&backurl=tr_status.php'>Acknowledge"
                           "</a> | <a href='{2}'>Trigger Link</a></b>").format(
-                              self._triggerid(), self._eventid(), self._url())},
+                              self._triggerid(), self._eventid(), self._url(),
+                              self.zbxurl)},
             "icon": {"url": statimg},
             "attributes": [{
                 "value": {
@@ -201,20 +206,22 @@ class ZabbixAlert(object):
            Call it after calling the Class with needed parameters
            to send the message"""
         _, color = self._sevassets()
-        paylod = {'notify': 'true', 'color': color, 'message':
+        payload = {'notify': 'true', 'color': color, 'message':
                   self._formatmessage(), 'card': self._card(), 'message_format':
                   'html'}
         params = {'auth_token': self.token}
         resp = requests.post('https://{0}.hipchat.com/v2/room/{1}/notification'.
                              format(self.hipname, self.roomid), data=json.dumps
-                             (paylod), headers=self.HEADERS, params=params)
-        print(resp)
+                             (payload), headers=self.HEADERS, params=params)
+        return resp
 
 def main():
-    ZBXALERT = ZabbixAlert(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-    if len(sys.argv) == 6:
-        ZBXALERT.images(okimg=sys.argv[5], probimg=sys.argv[6])
-    ZBXALERT.sendmsg()
+    ZBXALERT = ZabbixAlert(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4],
+                           sys.argv[5])
+    if len(sys.argv) == 8:
+        ZBXALERT.images(okimg=sys.argv[6], probimg=sys.argv[7])
+    resp = ZBXALERT.sendmsg()
+    return resp
 
 
 if __name__ == '__main__':
