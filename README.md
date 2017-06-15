@@ -2,9 +2,9 @@
 This alert script creates cards in hipchat that are expandable to reveal useful links to the alert.
 This uses the new HipChat v2 API. [HipChat API Info](https://developer.atlassian.com/hipchat/guide/hipchat-rest-api/api-access-tokens#APIaccesstokens-Usergeneratedtokens)
 
-####Add a new media type to Zabbix
+#### Add a new media type to Zabbix
 
-![Alt text](/imgs/zbx-media type.png?raw=true "Media Type")
+![Alt text](/imgs/zbx-media%20type.png?raw=true "Media Type")
 
 Point the script to the bash file if your having trouble getting the python script to run directly.
 
@@ -20,7 +20,7 @@ Define the parameters like so.
 
 **_The images are optional but you must provide both if you are using them._**
 
-####Add a new user for each HipChat room in Zabbix
+#### Add a new user for each HipChat room in Zabbix
 
 For each room you want to send to create a user and add a contact type of HipCard to it.
 
@@ -28,7 +28,7 @@ For each room you want to send to create a user and add a contact type of HipCar
 
 Set the Send to field to the HipChat Room ID you want to use for this user contact.
 
-####Create a new action in Zabbix
+#### Create a new action in Zabbix
 
 ![Alt text](/imgs/zbx-action.png?raw=true "Action Messsage")
 
