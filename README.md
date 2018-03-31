@@ -4,7 +4,7 @@ This uses the new HipChat v2 API. [HipChat API Info](https://developer.atlassian
 
 ####Add a new media type to Zabbix
 
-![Alt text](/imgs/zbx-media type.png?raw=true "Media Type")
+![Alt text](/imgs/zbx-media%20type.png?raw=true "Media Type")
 
 Point the script to the bash file if your having trouble getting the python script to run directly.
 

@@ -210,7 +210,10 @@ class ZabbixAlert(object):
                   self._formatmessage(), 'card': self._card(), 'message_format':
                   'html'}
         params = {'auth_token': self.token}
-        resp = requests.post('https://{0}.hipchat.com/v2/room/{1}/notification'.
+        pattern = re.compile("^http(s|)://")
+        if not pattern.match(self.hipname):
+            self.hipname = "https://{0}.hipchat.com".format(self.hipname)
+        resp = requests.post('{0}/v2/room/{1}/notification'.
                              format(self.hipname, self.roomid), data=json.dumps
                              (payload), headers=self.HEADERS, params=params)
         return resp
